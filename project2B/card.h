@@ -7,79 +7,31 @@
 
 #include <iostream>
 
+// suits for the cards
 enum Suit { CLUB, DIAMOND, HEART, SPADE };
 
-// suits for the cards
 class card {
 private:
-    int value; // 1 = ace, 2-10 = number, 11 = jack, 12 = queen, 13 = king 
+    int value; // 1 = ace, 2-10 = number, 11 = jack, 12 = queen, 13 = king
     Suit suit;
 
 public:
-   // default construcor, thus makes ace of clubs
-    card() {
-        value = 1;
-        suit = CLUB;
-    }
+    // default constructor, thus makes ace of clubs
+    card();
 
     // constructor with value and suit
-    card(int v, Suit s) {
-        value = v;
-        suit = s;
-    }
+    card(int v, Suit s);
 
     // setters
-    void setValue(int v) {
-        value = v;
-    }
-
-
-    void setSuit(Suit s) {
-        suit = s;
-    }
+    void setValue(int v);
+    void setSuit(Suit s);
 
     // getter functions
-    int getValue() const {
-        return value;
-    }
+    int getValue() const;
+    Suit getSuit() const;
 
-  
-    Suit getSuit() const {
-        return suit;
-    }
-
-   // prints card like "Ace of spades, etc"
-    friend std::ostream& operator<<(std::ostream& os, const card& c) {
-
-        // print name for face cards, otherwise just the number
-        if (c.value == 1)
-            os << "Ace";
-        else if (c.value == 11)
-            os << "Jack";
-        else if (c.value == 12)
-            os << "Queen";
-        else if (c.value == 13)
-            os << "King";
-        else
-            os << c.value;
-
-        os << " of ";
-
-        // print suit name
-        if (c.suit == CLUB)
-            os << "Clubs";
-        else if (c.suit == DIAMOND)
-            os << "Diamonds";
-        else if (c.suit == HEART)
-            os << "Hearts";
-        else if (c.suit == SPADE)
-            os << "Spades";
-
-        return os;
-    }
+    // prints card like "Ace of spades, etc"
+    friend std::ostream& operator<<(std::ostream& os, const card& c);
 };
 
 #endif
-
-
-
