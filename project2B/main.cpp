@@ -1,6 +1,6 @@
 // File: main.cpp
 // Names: Ryan Kim, Maddox Grillo-Smith, Vishnu Kumar, Preeth Somanchi
-// Assignment: Project Flip cards part a
+// Assignment: Project Flip cards part b
 
 #include <iostream>
 #include <cstdlib>
@@ -10,47 +10,59 @@
 
 using namespace std;
 
-int main() {
-    srand(static_cast<unsigned>(time(0))); // seed random
-
+// global function that runs the entire flip game
+void playFlip() {
+    // (1) initialize a deck with 52 cards in order
     deck myDeck;
 
-    // prints deck before shuffling
-    cout << "Deck Before Shuffle" << endl;
+    // (2) shuffle the deck and print all cards after shuffle
+    myDeck.shuffle();
+    myDeck.shuffle();
+    myDeck.shuffle();
+    cout << "Deck after shuffle:" << endl;
     cout << myDeck << endl;
 
-    // shuffle 3 times
-    myDeck.shuffle();
-    myDeck.shuffle();
-    myDeck.shuffle();
-
-    // prints deck after shuffling
-    cout << "Deck After Shuffle" << endl;
-    cout << myDeck << endl;
-
-    
-    // Draw 24 cards face down
-    card table[24];
-    bool faceUp[24] = { false }; // keeps track of which cards have been flipped
-    for (int i = 0; i < 24; i++) {
-        table[i] = myDeck.deal();
+    // (3) draw the top 24 cards from the deck and insert into the hand deck
+    // first we need an empty hand deck, so we create one and clear it
+    deck hand;
+    while (hand.front != NULL) {
+        node<card>* temp = hand.front;
+        hand.front = hand.front->next;
+        delete temp;
     }
 
+    // deal 24 cards from the main deck and place them in the hand
+    for (int i = 0; i < 24; i++) {
+        hand.replace(myDeck.deal());
+    }
+
+    // (4) print the hand deck and the remaining cards in the main deck
+    cout << "Hand deck (24 cards):" << endl;
+    cout << hand << endl;
+
+    cout << "Remaining deck (" << myDeck.size() << " cards):" << endl;
+    cout << myDeck << endl;
+
+    // (5) start the game
+    // keep track of which cards have been flipped (bonus: each card only flipped once)
+    bool faceUp[24] = { false };
     double score = 0.0;
     int flipped = 0;
 
     cout << "Welcome to Flip!" << endl;
 
     while (true) {
-        // show all 24 cards, ??? if face dow
+        // show all 24 cards, ??? if face down
         cout << "\nYour cards:" << endl;
+        node<card>* curr = hand.front;
         for (int i = 0; i < 24; i++) {
             cout << "  [" << (i + 1) << "] ";
             if (faceUp[i])
-                cout << table[i] << " (flipped)";
+                cout << curr->nodeValue << " (flipped)";
             else
                 cout << "???";
             cout << endl;
+            curr = curr->next;
         }
         cout << "\nScore: " << score << "  |  Cards flipped: " << flipped << "/24" << endl;
 
@@ -75,16 +87,23 @@ int main() {
 
         int idx = choice - 1;
 
-        // check if already flipped
+        // bonus: each card can only be flipped once
         if (faceUp[idx]) {
             cout << "That card is already flipped. Choose another." << endl;
             continue;
         }
 
-        // Flip the card and output it
+        // flip the card
         faceUp[idx] = true;
         flipped++;
-        card c = table[idx];
+
+        // walk to the chosen card in the linked list
+        curr = hand.front;
+        for (int i = 0; i < idx; i++) {
+            curr = curr->next;
+        }
+
+        card c = curr->nodeValue;
         cout << "You flipped: " << c << endl;
 
         int v = c.getValue();
@@ -94,10 +113,10 @@ int main() {
         if (v == 1) {              // Ace
             score += 10;
             cout << "  +10 (Ace)" << endl;
-        } else if (v >= 11) {     // Jack, Queen, King, face cards
+        } else if (v >= 11) {     // Jack, Queen, King face cards
             score += 5;
             cout << "  +5 (Face card)" << endl;
-        } else if (v >= 8 && v <= 10) { // 8 - 10 = nothing
+        } else if (v >= 8 && v <= 10) { // 8-10 = nothing
             cout << "  +0 (8, 9, or 10)" << endl;
         } else if (v == 7) { // 7, lose half
             score /= 2.0;
@@ -107,15 +126,21 @@ int main() {
             cout << "  Lost all your points (" << v << ")" << endl;
         }
 
-        // hearts give a bonus point on top of whatever else happed
+        // hearts give a bonus point on top of whatever else happened
         if (s == HEART) {
             score += 1;
             cout << "  +1 bonus (Heart)" << endl;
         }
     }
 
-    cout << "\nGame Over" << endl;
+    cout << "\nGame Over!" << endl;
     cout << "Final Score: " << score << endl;
+}
+
+int main() {
+    srand(static_cast<unsigned>(time(0))); // seed random
+
+    playFlip();
 
     return 0;
 }

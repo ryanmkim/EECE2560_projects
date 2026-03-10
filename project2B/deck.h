@@ -1,6 +1,6 @@
 // File: deck.h
 // Names: Ryan Kim, Maddox Grillo-Smith, Vishnu Kumar, Preeth Somanchi
-// Assignment: Project Flip cards part a
+// Assignment: Project Flip cards part b
 
 #ifndef DECK_CLASS
 #define DECK_CLASS
@@ -30,8 +30,11 @@ public:
     void shuffle();
 
     // deals one card off the top of the deck
-    // removes the front node and returns the card that was in it
-    card deal();
+    // removes the front node and returns the node pointer
+    node<card>* deal();
+
+    // places a card node on the bottom of the deck
+    void replace(node<card>* c);
 
     // overload operator to print out whole deck
     friend std::ostream& operator<<(std::ostream& os, const deck& d);

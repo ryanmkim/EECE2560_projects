@@ -1,6 +1,6 @@
 // File: deck.cpp
 // Names: Ryan Kim, Maddox Grillo-Smith, Vishnu Kumar, Preeth Somanchi
-// Assignment: Project Flip cards part a
+// Assignment: Project Flip cards part b
 
 #include <cstdlib>
 #include <ctime>
@@ -89,16 +89,36 @@ void deck::shuffle() {
 }
 
 // deals one card off the top of the deck
-// removes the front node and returns the card that was in it
-card deck::deal() {
+// removes the front node and returns the node pointer
+// caller is responsible for the memory of the returned node
+node<card>* deck::deal() {
     if (front == NULL) {
-        return card(); // if empty just return default card
+        return NULL; // nothing to deal
     }
     node<card>* temp = front; // save pointer to front node
-    card c = temp->nodeValue; // grab the card value
     front = front->next; // move front to next node
-    delete temp; // free old front node
-    return c;
+    temp->next = NULL; // disconnect the node from the list
+    return temp;
+}
+
+// places a card node on the bottom of the deck
+// walks to the end and links it there
+void deck::replace(node<card>* c) {
+    if (c == NULL) return;
+    c->next = NULL; // make sure it doesn't point to anything
+
+    // if the deck is empty this becomes the only node
+    if (front == NULL) {
+        front = c;
+        return;
+    }
+
+    // walk to the last node
+    node<card>* curr = front;
+    while (curr->next != NULL) {
+        curr = curr->next;
+    }
+    curr->next = c; // link it at the end
 }
 
 // overload operator to print out whole deck

@@ -1,6 +1,6 @@
 // File: card.h
 // Names: Ryan Kim, Maddox Grillo-Smith, Vishnu Kumar, Preeth Somanchi
-// Assignment: Project Flip cards part a
+// Assignment: Project Flip cards part b
 
 #ifndef CARD_H
 #define CARD_H
@@ -21,6 +21,12 @@ public:
 
     // constructor with value and suit
     card(int v, Suit s);
+
+    // copy constructor
+    card(const card& other);
+
+    // overloaded assignment operator
+    card& operator=(const card& other);
 
     // setters
     void setValue(int v);
